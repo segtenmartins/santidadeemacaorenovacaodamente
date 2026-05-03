@@ -4,505 +4,824 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Santidade em Ação — Rm 12.2</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --blue-deep:   #042C53;
-    --blue-mid:    #185FA5;
-    --blue-light:  #378ADD;
-    --blue-pale:   #E6F1FB;
-    --blue-soft:   #85B7EB;
-    --gold:        #EF9F27;
-    --gold-pale:   #FAEEDA;
-    --gold-dark:   #854F0B;
-    --green-pale:  #EAF3DE;
-    --green-dark:  #27500A;
-    --green-mid:   #3B6D11;
-    --text-main:   #1a1a2e;
-    --text-muted:  #555;
-    --radius-md:   8px;
-    --radius-lg:   14px;
-    --radius-xl:   22px;
-  }
+:root {
+  --cor-destaque: #ffffff;
+  --cor-texto: #ffffff;
+  --cor-secundario: #bbbbbb;
+  --fundo: #0d0a04;
+  --fundo-card: rgba(255,255,255,0.05);
+  --borda: rgba(255,255,255,0.18);
+}
 
-  html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; }
 
-  body {
-    font-family: 'Lato', sans-serif;
-    font-weight: 400;
-    background: #f4f6fa;
-    color: var(--text-main);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 2rem 1rem;
-  }
+body {
+  font-family: 'EB Garamond', serif;
+  font-size: clamp(1.15rem, 2.5vw, 1.35rem);
+  background: var(--fundo);
+  color: var(--cor-texto);
+  line-height: 1.75;
+  overflow-x: hidden;
+}
 
-  .leaflet {
-    background: #fff;
-    max-width: 620px;
-    width: 100%;
-    border-radius: var(--radius-xl);
-    overflow: hidden;
-    box-shadow: 0 8px 48px rgba(4,44,83,0.13), 0 2px 8px rgba(4,44,83,0.07);
-  }
+/* PROGRESS BAR */
+#progressBar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  width: 0%;
+  background: #fff;
+  z-index: 9999;
+  transition: width 0.1s linear;
+}
 
-  /* HERO */
-  .hero {
-    background: linear-gradient(160deg, var(--blue-deep) 0%, var(--blue-mid) 55%, var(--blue-light) 100%);
-    padding: 3.2rem 2rem 2.6rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero::after {
-    content: '';
-    position: absolute;
-    bottom: -60px; left: 50%;
-    transform: translateX(-50%);
-    width: 300px; height: 120px;
-    background: radial-gradient(ellipse, rgba(133,183,235,0.25) 0%, transparent 70%);
-    pointer-events: none;
-  }
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 4rem 2rem 6rem;
+  position: relative;
+  background: radial-gradient(ellipse at 50% 40%, rgba(255,255,255,0.04) 0%, transparent 70%);
+}
 
-  .cross-wrap { margin: 0 auto 1.4rem; width: 52px; height: 52px; position: relative; }
-  .cross-wrap::before {
-    content: '';
-    position: absolute;
-    left: 50%; top: 0;
-    transform: translateX(-50%);
-    width: 11px; height: 52px;
-    background: rgba(255,255,255,0.92);
-    border-radius: 4px;
-  }
-  .cross-wrap::after {
-    content: '';
-    position: absolute;
-    left: 0; top: 15px;
-    width: 52px; height: 11px;
-    background: rgba(255,255,255,0.92);
-    border-radius: 4px;
-  }
+.hero-symbol {
+  font-size: 3.5rem;
+  margin-bottom: 1.5rem;
+  display: inline-block;
+  animation: float 4s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-14px); }
+}
 
-  .hero-tag {
-    font-family: 'Lato', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.55);
-    margin-bottom: 0.6rem;
-  }
-  .hero h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 3rem;
-    font-weight: 600;
-    color: #fff;
-    line-height: 1.2;
-    margin-bottom: 0.4rem;
-  }
-  .hero h1 em {
-    font-style: italic;
-    color: var(--blue-soft);
-  }
-  .hero-sub {
-    font-size: 17px;
-    color: rgba(255,255,255,0.7);
-    font-weight: 300;
-    margin-bottom: 1rem;
-    line-height: 1.5;
-  }
-  .hero-author {
-    display: inline-block;
-    font-size: 15px;
-    color: rgba(255,255,255,0.45);
-    border-top: 0.5px solid rgba(255,255,255,0.2);
-    padding-top: 0.7rem;
-    letter-spacing: 0.5px;
-  }
+.hero-category {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.62rem, 1.5vw, 0.78rem);
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--cor-secundario);
+  margin-bottom: 1.2rem;
+}
 
-  /* VERSE BANNER */
-  .verse-banner {
-    background: var(--blue-pale);
-    border-left: 5px solid var(--blue-mid);
-    padding: 1.3rem 1.6rem;
-  }
-  .verse-banner blockquote {
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    font-size: 18px;
-    color: var(--blue-deep);
-    line-height: 1.75;
-  }
-  .verse-banner cite {
-    display: block;
-    margin-top: 0.5rem;
-    font-family: 'Lato', sans-serif;
-    font-style: normal;
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--blue-mid);
-    letter-spacing: 0.5px;
-  }
+.hero h1 {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(2.2rem, 7vw, 4rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--cor-destaque);
+  margin-bottom: 1rem;
+}
 
-  /* BODY */
-  .section { padding: 1.8rem 1.6rem 0; }
+.hero-sub {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  color: var(--cor-secundario);
+  max-width: 540px;
+  margin-bottom: 1.4rem;
+  line-height: 1.6;
+}
 
-  .intro-text {
-    font-size: 17px;
-    color: #333;
-    line-height: 1.8;
-    margin-bottom: 1.6rem;
-  }
+.hero-author {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.72rem, 1.8vw, 0.88rem);
+  letter-spacing: 0.2em;
+  color: rgba(255,255,255,0.4);
+}
 
-  .section-label {
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--blue-mid);
-    margin-bottom: 0.9rem;
-  }
+.hero-arrow {
+  position: absolute;
+  bottom: 2.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  animation: arrowPulse 2.2s ease-in-out infinite;
+}
+@keyframes arrowPulse {
+  0%, 100% { opacity: 0.4; transform: translateX(-50%) scaleY(1); }
+  50%       { opacity: 1;   transform: translateX(-50%) scaleY(1.18); }
+}
+.hero-arrow span {
+  display: block;
+  width: 1px;
+  height: 30px;
+  background: rgba(255,255,255,0.35);
+}
+.hero-arrow::after {
+  content: '↓';
+  font-size: 1rem;
+  color: rgba(255,255,255,0.4);
+}
 
-  /* STEPS */
-  .steps-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 1rem;
-  }
-  .step-card {
-    background: #f7f9fc;
-    border: 1.5px solid #dde7f4;
-    border-radius: var(--radius-lg);
-    padding: 1rem;
-    cursor: pointer;
-    transition: border-color 0.2s, background 0.2s, transform 0.15s;
-  }
-  .step-card:hover { border-color: var(--blue-mid); background: var(--blue-pale); transform: translateY(-1px); }
-  .step-card.active {
-    border-color: var(--blue-mid);
-    background: var(--blue-pale);
-  }
-  .step-num {
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--blue-mid);
-    margin-bottom: 5px;
-  }
-  .step-title {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--blue-deep);
-    margin-bottom: 4px;
-    line-height: 1.35;
-  }
-  .step-ref {
-    font-size: 13px;
-    color: var(--blue-light);
-  }
+/* NAV */
+#mainNav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(13,10,4,0.93);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--borda);
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+#mainNav::-webkit-scrollbar { display: none; }
 
-  .detail-panel {
-    background: #fff;
-    border: 1.5px solid var(--blue-mid);
-    border-radius: var(--radius-lg);
-    padding: 1.2rem 1.3rem;
-    margin-bottom: 1.6rem;
-    display: none;
-    animation: fadeIn 0.25s ease;
-  }
-  .detail-panel.visible { display: block; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
-  .detail-panel p {
-    font-size: 16px;
-    color: #333;
-    line-height: 1.75;
-    margin-bottom: 0.7rem;
-  }
-  .pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.3rem; }
-  .pill {
-    background: var(--blue-pale);
-    color: var(--blue-mid);
-    font-size: 13px;
-    font-weight: 700;
-    padding: 4px 12px;
-    border-radius: 20px;
-    border: 1px solid #b5d4f4;
-  }
+.nav-btn {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.58rem, 1.5vw, 0.7rem);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--cor-secundario);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 1rem 1.3rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.2s, border-color 0.2s;
+  flex-shrink: 0;
+}
+.nav-btn:hover { color: #fff; }
+.nav-btn.ativo { color: #fff; border-bottom-color: #fff; }
 
-  /* CONTRAST */
-  .contrast-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 1.6rem;
-  }
-  .c-card {
-    border-radius: var(--radius-md);
-    padding: 1rem;
-  }
-  .c-card.world { background: var(--gold-pale); border: 1px solid #FAC775; }
-  .c-card.word  { background: var(--green-pale); border: 1px solid #C0DD97; }
-  .c-label-sm {
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-bottom: 7px;
-  }
-  .world .c-label-sm { color: var(--gold-dark); }
-  .word  .c-label-sm { color: var(--green-mid); }
-  .c-card p { font-size: 15px; line-height: 1.6; }
-  .world p { color: #633806; }
-  .word  p { color: var(--green-dark); }
+/* SECTIONS */
+.section {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 5rem 2rem 0;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.section.visivel { opacity: 1; transform: translateY(0); }
 
-  /* QUESTION BOX */
-  .question-box {
-    background: var(--blue-deep);
-    border-radius: var(--radius-lg);
-    padding: 1.5rem 1.6rem;
-    margin: 0 1.6rem 1.6rem;
-    text-align: center;
-  }
-  .question-box p {
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    font-size: 18px;
-    color: rgba(255,255,255,0.88);
-    line-height: 1.7;
-  }
-  .question-box strong {
-    color: var(--blue-soft);
-    font-style: normal;
-    font-family: 'Lato', sans-serif;
-    font-weight: 700;
-    font-size: 15px;
-    letter-spacing: 0.5px;
-  }
+/* DIVIDER */
+.divider {
+  text-align: center;
+  margin: 4rem auto 0;
+  max-width: 780px;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--borda);
+}
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--borda);
+}
+.divider span { font-size: 1rem; color: rgba(255,255,255,0.22); }
 
-  /* CTA */
-  .cta-section {
-    background: var(--blue-mid);
-    padding: 1.6rem;
-    text-align: center;
-  }
-  .cta-section p {
-    font-size: 17px;
-    color: rgba(255,255,255,0.85);
-    line-height: 1.7;
-    margin-bottom: 1.1rem;
-  }
-  .cta-btn {
-    display: inline-block;
-    background: rgba(255,255,255,0.15);
-    border: 1.5px solid rgba(255,255,255,0.5);
-    color: #fff;
-    font-family: 'Lato', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    padding: 14px 32px;
-    border-radius: 30px;
-    text-decoration: none;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.15s;
-  }
-  .cta-btn:hover { background: rgba(255,255,255,0.28); transform: translateY(-1px); }
+/* SECTION LABEL */
+.section-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.62rem, 1.6vw, 0.78rem);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--cor-secundario);
+  margin-bottom: 2rem;
+}
 
-  /* FOOTER */
-  .footer {
-    padding: 1rem 1.6rem 1.5rem;
-    border-top: 1px solid #e8edf5;
-    text-align: center;
-  }
-  .footer p {
-    font-size: 13px;
-    color: #999;
-    line-height: 1.7;
-  }
+/* QUOTE BLOCK */
+.quote-block {
+  border-left: 2px solid #fff;
+  padding: 1.2rem 1.6rem;
+  margin-bottom: 2.5rem;
+  position: relative;
+}
+.quote-deco {
+  font-family: 'EB Garamond', serif;
+  font-size: 5rem;
+  line-height: 0.5;
+  color: rgba(255,255,255,0.1);
+  position: absolute;
+  top: 0.8rem; left: 1rem;
+  pointer-events: none;
+  user-select: none;
+}
+.quote-block blockquote {
+  font-style: italic;
+  color: rgba(255,255,255,0.88);
+  position: relative;
+  z-index: 1;
+  line-height: 1.8;
+}
+.quote-block cite {
+  display: block;
+  margin-top: 0.8rem;
+  font-family: 'Cinzel', serif;
+  font-style: normal;
+  font-size: clamp(0.58rem, 1.4vw, 0.7rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cor-secundario);
+}
 
-  @media (max-width: 480px) {
-    body { padding: 0; }
-    .leaflet { border-radius: 0; box-shadow: none; }
-    .hero h1 { font-size: 2rem; }
-    .steps-grid, .contrast-grid { grid-template-columns: 1fr; }
-  }
+/* CARDS */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+.card {
+  background: var(--fundo-card);
+  border: 1px solid var(--borda);
+  border-radius: 4px;
+  padding: 1.5rem 1.4rem;
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255,255,255,0.45);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+.card-icon { font-size: 1.8rem; margin-bottom: 0.7rem; }
+.card-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.68rem, 1.6vw, 0.8rem);
+  letter-spacing: 0.1em;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+.card p { font-size: clamp(0.95rem, 2vw, 1.08rem); color: var(--cor-secundario); line-height: 1.7; }
+
+/* ACCORDION */
+.accordion { margin-bottom: 2.5rem; }
+.acc-item {
+  border: 1px solid var(--borda);
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+}
+.acc-head {
+  width: 100%;
+  background: none;
+  border: none;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.1rem 1.3rem;
+  cursor: pointer;
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.65rem, 1.6vw, 0.8rem);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: left;
+  gap: 1rem;
+  transition: background 0.2s;
+}
+.acc-head:hover { background: var(--fundo-card); }
+.acc-arrow { font-size: 0.9rem; transition: transform 0.3s; flex-shrink: 0; color: var(--cor-secundario); }
+.acc-item.open .acc-arrow { transform: rotate(180deg); }
+.acc-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+.acc-body-inner {
+  padding: 0 1.3rem 1.2rem;
+  color: var(--cor-secundario);
+  font-style: italic;
+  line-height: 1.8;
+  font-size: clamp(1rem, 2vw, 1.15rem);
+}
+.acc-refs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.8rem; }
+.ref-tag {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid var(--borda);
+  padding: 3px 10px;
+  border-radius: 20px;
+  color: var(--cor-secundario);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.ref-tag:hover { border-color: #fff; color: #fff; }
+.ref-tag.flash { animation: tagFlash 0.35s ease; }
+@keyframes tagFlash {
+  0%   { background: rgba(255,255,255,0); }
+  40%  { background: rgba(255,255,255,0.2); }
+  100% { background: rgba(255,255,255,0); }
+}
+
+/* STEP LIST */
+.step-list { margin-bottom: 2.5rem; }
+.step-item {
+  display: flex;
+  gap: 1.2rem;
+  align-items: flex-start;
+  margin-bottom: 1.4rem;
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.step-item.visivel { opacity: 1; transform: translateX(0); }
+.step-num-circle {
+  flex-shrink: 0;
+  width: 2.4rem; height: 2.4rem;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  color: #fff;
+  margin-top: 0.1rem;
+}
+.step-content { flex: 1; }
+.step-label {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.68rem, 1.6vw, 0.8rem);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+  margin-bottom: 0.25rem;
+}
+.step-content p { color: var(--cor-secundario); font-style: italic; }
+
+/* CONTRAST */
+.contrast-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+.c-box { border: 1px solid var(--borda); border-radius: 4px; padding: 1.3rem; }
+.c-box-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.63rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  margin-bottom: 0.7rem;
+}
+.c-box.mundo .c-box-label { color: #d4913a; }
+.c-box.palavra .c-box-label { color: #82b46a; }
+.c-box p { color: var(--cor-secundario); font-style: italic; font-size: clamp(0.95rem, 2vw, 1.08rem); }
+
+/* IMPLICATIONS */
+.impl-list { margin-bottom: 2.5rem; }
+.impl-item { display: flex; gap: 1rem; margin-bottom: 1.2rem; }
+.impl-dot {
+  flex-shrink: 0;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 8px rgba(255,255,255,0.55);
+  margin-top: 0.58rem;
+}
+.impl-body { flex: 1; }
+.impl-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.62rem, 1.5vw, 0.73rem);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #fff;
+  margin-bottom: 0.2rem;
+}
+.impl-body p { color: var(--cor-secundario); font-style: italic; }
+
+/* QUESTION BOX */
+.question-box {
+  border: 1px solid var(--borda);
+  border-radius: 4px;
+  padding: 2rem 1.8rem;
+  margin-bottom: 2.5rem;
+  text-align: center;
+  background: var(--fundo-card);
+}
+.question-box p { font-style: italic; color: rgba(255,255,255,0.82); line-height: 1.8; }
+.question-box strong {
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-style: normal;
+  font-size: clamp(0.62rem, 1.5vw, 0.74rem);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #fff;
+  margin-bottom: 0.8rem;
+}
+
+/* CTA */
+.cta-section {
+  border-top: 1px solid var(--borda);
+  padding: 4rem 2rem;
+  text-align: center;
+  max-width: 780px;
+  margin: 0 auto;
+}
+.cta-section p {
+  color: var(--cor-secundario);
+  font-style: italic;
+  margin-bottom: 2rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.cta-btn {
+  display: inline-block;
+  border: 1px solid rgba(255,255,255,0.5);
+  color: #fff;
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.62rem, 1.6vw, 0.78rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 1rem 2.5rem;
+  border-radius: 2px;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.15s;
+}
+.cta-btn:hover { background: rgba(255,255,255,0.08); transform: translateY(-2px); }
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 3rem 2rem 4rem;
+  border-top: 1px solid var(--borda);
+}
+.footer-symbol { font-size: 2rem; margin-bottom: 1rem; display: block; }
+footer p {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.56rem, 1.4vw, 0.66rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.28);
+  line-height: 2.2;
+}
+
+/* BACK TO TOP */
+#backTop {
+  position: fixed;
+  bottom: 2rem; right: 2rem;
+  width: 44px; height: 44px;
+  border: 1px solid var(--borda);
+  border-radius: 50%;
+  background: rgba(13,10,4,0.88);
+  color: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.2s;
+  z-index: 200;
+}
+#backTop.visivel { opacity: 1; pointer-events: auto; }
+#backTop:hover { transform: translateY(-2px); }
+
+@media (max-width: 520px) {
+  .cards-grid { grid-template-columns: 1fr; }
+  .contrast-row { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 2rem; }
+  .section { padding: 3.5rem 1.3rem 0; }
+}
 </style>
 </head>
 <body>
 
-<article class="leaflet">
+<div id="progressBar"></div>
 
-  <!-- HERO -->
-  <header class="hero">
-    <div class="cross-wrap" aria-hidden="true"></div>
-    <p class="hero-tag">Mensagem especial</p>
-    <h1>Santidade<br>em <em>Ação</em></h1>
-    <p class="hero-sub">Como Transformar sua Mente e Viver como Cristo</p>
-    <span class="hero-author">Rm 12.2 &nbsp;·&nbsp; Pr João Alves</span>
-  </header>
+<!-- ░░░ HERO ░░░ -->
+<section class="hero">
+  <span class="hero-symbol">✝</span>
+  <p class="hero-category">Mensagem Evangelística · Pr João Alves</p>
+  <h1>Santidade<br>em Ação</h1>
+  <p class="hero-sub">Como Transformar sua Mente e Viver como Cristo</p>
+  <p class="hero-author">Romanos 12.2</p>
+  <div class="hero-arrow"><span></span></div>
+</section>
 
-  <!-- VERSE -->
-  <div class="verse-banner">
+<!-- ░░░ NAVEGAÇÃO ░░░ -->
+<nav id="mainNav">
+  <button class="nav-btn ativo" onclick="irPara('versiculo')">O Versículo</button>
+  <button class="nav-btn"       onclick="irPara('desafio')">O Desafio</button>
+  <button class="nav-btn"       onclick="irPara('passos')">Os 4 Passos</button>
+  <button class="nav-btn"       onclick="irPara('contraste')">Contraste</button>
+  <button class="nav-btn"       onclick="irPara('reflexao')">Reflexão</button>
+</nav>
+
+<!-- ░░░ SEÇÃO 1 — O VERSÍCULO ░░░ -->
+<div class="section" id="versiculo" data-nav="0">
+  <p class="section-title">A Palavra Central</p>
+  <div class="quote-block">
+    <span class="quote-deco">"</span>
     <blockquote>
-      "Não vos conformeis com este século, mas transformai-vos pela renovação da vossa mente,
-      para que experimenteis qual seja a boa, agradável e perfeita vontade de Deus."
+      Não vos conformeis com este século, mas transformai-vos pela renovação da vossa mente,
+      para que experimenteis qual seja a boa, agradável e perfeita vontade de Deus.
     </blockquote>
     <cite>— Romanos 12.2</cite>
   </div>
+  <p style="color:var(--cor-secundario);font-style:italic;margin-bottom:2.5rem;line-height:1.85;">
+    Seguir a Cristo é um processo transformador no qual Ele molda nossa mentalidade para que esteja
+    alinhada com a Sua. O apóstolo Paulo ensinou os crentes a não se conformarem com os padrões
+    deste mundo — e esse chamado é tão urgente hoje quanto foi no primeiro século.
+  </p>
+</div>
 
-  <!-- INTRO -->
-  <div class="section">
-    <p class="intro-text">
-      Seguir a Cristo é um processo transformador no qual Ele molda nossa mentalidade para que esteja
-      alinhada com a Sua. O apóstolo Paulo ensinou os crentes a não se conformarem com os padrões
-      deste mundo — e esse chamado é tão urgente hoje quanto foi no primeiro século.
-    </p>
+<div class="divider"><span>✦</span></div>
 
-    <p class="section-label">Quatro passos da transformação</p>
+<!-- ░░░ SEÇÃO 2 — O DESAFIO ░░░ -->
+<div class="section" id="desafio" data-nav="1">
+  <p class="section-title">O Desafio da Cultura</p>
+  <div class="cards-grid">
+    <div class="card">
+      <div class="card-icon">🌍</div>
+      <p class="card-title">A Influência do Mundo</p>
+      <p>Estamos sob a influência de muitas pessoas que não seguem os caminhos de Deus. A sociedade nos incentiva a priorizar a nós mesmos e a promover nossos próprios interesses.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🙏</div>
+      <p class="card-title">A Provisão do Pai</p>
+      <p>Nosso Pai Celestial promete suprir todas as nossas necessidades <em>(Fp 4.19)</em>. Podemos confiar plenamente nEle em vez de buscar satisfação nos caminhos do mundo.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚖️</div>
+      <p class="card-title">Humildade Honrada</p>
+      <p>Devemos negar a nós mesmos e seguir a Cristo <em>(Lc 9.23)</em>. Os humildes, e não os orgulhosos, serão honrados <em>(Tg 4.10)</em>.</p>
+    </div>
+  </div>
+</div>
 
-    <!-- STEPS -->
-    <div class="steps-grid">
-      <div class="step-card active" onclick="showStep(0,this)" tabindex="0" role="button" aria-expanded="true">
-        <p class="step-num">Passo 1</p>
-        <p class="step-title">Recuse a conformidade</p>
-        <p class="step-ref">Rm 12.2 · Tg 4.10</p>
-      </div>
-      <div class="step-card" onclick="showStep(1,this)" tabindex="0" role="button" aria-expanded="false">
-        <p class="step-num">Passo 2</p>
-        <p class="step-title">Renove sua mente</p>
-        <p class="step-ref">Cl 3.2 · Fp 4.8</p>
-      </div>
-      <div class="step-card" onclick="showStep(2,this)" tabindex="0" role="button" aria-expanded="false">
-        <p class="step-num">Passo 3</p>
-        <p class="step-title">Proteja seus pensamentos</p>
-        <p class="step-ref">Fp 4.19 · Lc 9.23</p>
-      </div>
-      <div class="step-card" onclick="showStep(3,this)" tabindex="0" role="button" aria-expanded="false">
-        <p class="step-num">Passo 4</p>
-        <p class="step-title">Cultive comunidade</p>
-        <p class="step-ref">Hb 10.24–25</p>
+<div class="divider"><span>✦</span></div>
+
+<!-- ░░░ SEÇÃO 3 — OS 4 PASSOS ░░░ -->
+<div class="section" id="passos" data-nav="2">
+  <p class="section-title">Quatro Passos da Transformação</p>
+
+  <div class="accordion">
+    <div class="acc-item open">
+      <button class="acc-head" onclick="toggleAcc(this)">
+        <span>01 &nbsp;—&nbsp; Recuse a Conformidade</span>
+        <span class="acc-arrow">▾</span>
+      </button>
+      <div class="acc-body" style="max-height:400px">
+        <div class="acc-body-inner">
+          A pressão cultural para nos moldarmos aos padrões do mundo é constante. Paulo exige uma ruptura
+          deliberada: <em>"não vos conformeis"</em>. Resistir começa com uma decisão consciente e diária
+          de não deixar o mundo ditar seus valores e sua identidade.
+          <div class="acc-refs">
+            <span class="ref-tag" onclick="flashTag(this)">Rm 12.2</span>
+            <span class="ref-tag" onclick="flashTag(this)">Tg 4.10</span>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- DETAIL PANELS -->
-    <div class="detail-panel visible" id="detail-0">
-      <p>
-        A sociedade incentiva o egoísmo — tomar o que queremos e promover nossos próprios interesses.
-        Mas a Bíblia vai na contramão: os humildes, e não os orgulhosos, serão honrados (Tiago 4.10).
-        Resistir à pressão cultural começa com uma decisão consciente e diária de não se moldar aos
-        padrões do mundo.
-      </p>
-      <div class="pills">
-        <span class="pill">Rm 12.2</span>
-        <span class="pill">Tg 4.10</span>
-        <span class="pill">Lc 9.23</span>
+    <div class="acc-item">
+      <button class="acc-head" onclick="toggleAcc(this)">
+        <span>02 &nbsp;—&nbsp; Renove sua Mente</span>
+        <span class="acc-arrow">▾</span>
+      </button>
+      <div class="acc-body">
+        <div class="acc-body-inner">
+          A transformação acontece de dentro para fora. Paulo exorta a fixar os pensamentos nas coisas
+          do alto <em>(Cl 3.2)</em> e a se concentrar em tudo o que é verdadeiro, justo, puro e amável
+          <em>(Fp 4.8)</em>. Adotar a mente de Cristo significa ajustar nossa perspectiva até que nossos
+          pensamentos reflitam as Sagradas Escrituras.
+          <div class="acc-refs">
+            <span class="ref-tag" onclick="flashTag(this)">Cl 3.2</span>
+            <span class="ref-tag" onclick="flashTag(this)">Fp 4.8</span>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="detail-panel" id="detail-1">
-      <p>
-        Paulo exorta a fixar nossos pensamentos nas coisas do alto (Colossenses 3.2) e a nos
-        concentrarmos em tudo o que é verdadeiro, justo, puro e amável (Filipenses 4.8). Adotar a
-        mente de Cristo significa ajustar nossa perspectiva até que nossos pensamentos reflitam as
-        Sagradas Escrituras.
-      </p>
-      <div class="pills">
-        <span class="pill">Cl 3.2</span>
-        <span class="pill">Fp 4.8</span>
+    <div class="acc-item">
+      <button class="acc-head" onclick="toggleAcc(this)">
+        <span>03 &nbsp;—&nbsp; Proteja seus Pensamentos</span>
+        <span class="acc-arrow">▾</span>
+      </button>
+      <div class="acc-body">
+        <div class="acc-body-inner">
+          Devemos proteger nossa mente com a verdade bíblica. Deus já prometeu suprir nossas necessidades
+          <em>(Fp 4.19)</em>, então podemos negar a nós mesmos sem medo e seguir a Cristo <em>(Lc 9.23)</em>.
+          A fé é a armadura que guarda a mente da ansiedade e do egoísmo.
+          <div class="acc-refs">
+            <span class="ref-tag" onclick="flashTag(this)">Fp 4.19</span>
+            <span class="ref-tag" onclick="flashTag(this)">Lc 9.23</span>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="detail-panel" id="detail-2">
-      <p>
-        Nosso Pai Celestial promete suprir todas as nossas necessidades (Filipenses 4.19). Por isso
-        podemos negar a nós mesmos sem medo e seguir a Cristo (Lucas 9.23), confiando que Ele cuida
-        de nós. A fé é a armadura que protege a mente da ansiedade e do egoísmo.
-      </p>
-      <div class="pills">
-        <span class="pill">Fp 4.19</span>
-        <span class="pill">Lc 9.23</span>
-      </div>
-    </div>
-
-    <div class="detail-panel" id="detail-3">
-      <p>
-        Cercar-se de crentes maduros é fundamental. Eles nos alertam quando começamos a nos desviar e
-        nos animam a permanecer no caminho. A transformação não acontece no isolamento — acontece na
-        comunidade de fé reunida para o amor e as boas obras.
-      </p>
-      <div class="pills">
-        <span class="pill">Hb 10.24–25</span>
-      </div>
-    </div>
-
-    <!-- CONTRAST -->
-    <p class="section-label">O mundo versus a Palavra</p>
-    <div class="contrast-grid">
-      <div class="c-card world">
-        <p class="c-label-sm">O mundo diz</p>
-        <p>Priorize-se. Tome o que quiser. Promova seus próprios interesses acima de tudo.</p>
-      </div>
-      <div class="c-card word">
-        <p class="c-label-sm">A Palavra diz</p>
-        <p>Negue-se. Humilhe-se. Confie que Deus provê tudo o que você realmente precisa.</p>
+    <div class="acc-item">
+      <button class="acc-head" onclick="toggleAcc(this)">
+        <span>04 &nbsp;—&nbsp; Cultive Comunidade</span>
+        <span class="acc-arrow">▾</span>
+      </button>
+      <div class="acc-body">
+        <div class="acc-body-inner">
+          Cercar-se de crentes maduros é indispensável. Eles nos alertam quando começamos a nos desviar
+          e nos animam a permanecer no caminho. A transformação genuína não acontece no isolamento —
+          ela floresce na comunidade de fé reunida para o amor e as boas obras.
+          <div class="acc-refs">
+            <span class="ref-tag" onclick="flashTag(this)">Hb 10.24–25</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- QUESTION -->
+  <!-- Step list visual -->
+  <div class="step-list">
+    <div class="step-item">
+      <div class="step-num-circle">1</div>
+      <div class="step-content">
+        <p class="step-label">Recuse</p>
+        <p>Tome uma decisão diária de não se moldar aos padrões deste século.</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num-circle">2</div>
+      <div class="step-content">
+        <p class="step-label">Renove</p>
+        <p>Fixe sua mente nas coisas do alto e na Palavra de Deus.</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num-circle">3</div>
+      <div class="step-content">
+        <p class="step-label">Proteja</p>
+        <p>Vista a armadura da fé e confie que Deus supre suas necessidades.</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num-circle">4</div>
+      <div class="step-content">
+        <p class="step-label">Cultive</p>
+        <p>Cerque-se de irmãos maduros que o ajudem a permanecer no caminho.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><span>✦</span></div>
+
+<!-- ░░░ SEÇÃO 4 — CONTRASTE ░░░ -->
+<div class="section" id="contraste" data-nav="3">
+  <p class="section-title">O Mundo versus a Palavra</p>
+  <div class="contrast-row">
+    <div class="c-box mundo">
+      <p class="c-box-label">O Mundo Diz</p>
+      <p>Priorize-se. Tome o que quiser. Promova seus próprios interesses acima de tudo.</p>
+    </div>
+    <div class="c-box palavra">
+      <p class="c-box-label">A Palavra Diz</p>
+      <p>Negue-se. Humilhe-se. Confie que Deus provê tudo o que você realmente precisa.</p>
+    </div>
+  </div>
+
+  <div class="impl-list">
+    <div class="impl-item">
+      <div class="impl-dot"></div>
+      <div class="impl-body">
+        <p class="impl-title">Pensamentos Alinhados</p>
+        <p>Nossa perspectiva de vida deve ser ajustada até que nossos pensamentos estejam alinhados com as Sagradas Escrituras.</p>
+      </div>
+    </div>
+    <div class="impl-item">
+      <div class="impl-dot"></div>
+      <div class="impl-body">
+        <p class="impl-title">Verdade como Escudo</p>
+        <p>Proteja sua mente com a verdade bíblica antes que o mundo a molde com suas mentiras e ilusões.</p>
+      </div>
+    </div>
+    <div class="impl-item">
+      <div class="impl-dot"></div>
+      <div class="impl-body">
+        <p class="impl-title">Capacitação do Espírito</p>
+        <p>Permita que o Espírito Santo o capacite a fazer as mudanças necessárias e a se tornar mais semelhante a Cristo.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><span>✦</span></div>
+
+<!-- ░░░ SEÇÃO 5 — REFLEXÃO ░░░ -->
+<div class="section" id="reflexao" data-nav="4">
+  <p class="section-title">Reflexão Pessoal</p>
+
+  <div class="quote-block" style="margin-bottom:2rem;">
+    <blockquote>
+      Adotar a mente de Cristo envolve ajustar nossa perspectiva de vida até que nossos pensamentos
+      estejam alinhados com as Sagradas Escrituras.
+    </blockquote>
+    <cite>— Pr João Alves</cite>
+  </div>
+
   <div class="question-box">
     <p>
-      <strong>PERGUNTE A SI MESMO</strong><br>
-      Estou me concentrando no que é importante para o Senhor?
-      Permita que o Espírito Santo o capacite a fazer as mudanças necessárias
-      e a se tornar mais semelhante a Cristo.
+      <strong>Pergunte a si mesmo</strong>
+      Estou me concentrando no que é importante para o Senhor? Permita que o Espírito Santo o capacite
+      a fazer as mudanças necessárias e a se tornar mais semelhante a Cristo.
     </p>
   </div>
+</div>
 
-  <!-- CTA -->
-  <div class="cta-section">
-    <p>
-      Você deseja iniciar essa jornada de transformação? Deus está chamando você hoje.
-      Abra seu coração e permita que Ele renove sua mente.
-    </p>
-    <a class="cta-btn" href="https://www.radiomateus633.com" target="_blank" rel="noopener">
-      Quero transformar minha mente
-    </a>
-  </div>
+<!-- ░░░ CTA ░░░ -->
+<div class="cta-section">
+  <p>
+    Você deseja iniciar essa jornada de transformação? Deus está chamando você hoje.
+    Abra seu coração e permita que Ele renove sua mente.
+  </p>
+  <a class="cta-btn" href="https://www.radiomateus633.com" target="_blank" rel="noopener">
+    Quero Transformar Minha Mente
+  </a>
+</div>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <p>
-      Baseado na mensagem <em>Santidade em Ação</em> · Pr João Alves<br>
-      Rm 12.2 &nbsp;·&nbsp; Fp 4.8, 19 &nbsp;·&nbsp; Cl 3.2 &nbsp;·&nbsp; Lc 9.23 &nbsp;·&nbsp; Tg 4.10 &nbsp;·&nbsp; Hb 10.24
-    </p>
-  </footer>
+<!-- ░░░ RODAPÉ ░░░ -->
+<footer>
+  <span class="footer-symbol">✝</span>
+  <p>Santidade em Ação &nbsp;·&nbsp; Pr João Alves</p>
+  <p>Rm 12.2 &nbsp;·&nbsp; Fp 4.8, 19 &nbsp;·&nbsp; Cl 3.2 &nbsp;·&nbsp; Lc 9.23 &nbsp;·&nbsp; Tg 4.10 &nbsp;·&nbsp; Hb 10.24</p>
+  <p style="margin-top:0.5rem;opacity:0.4;font-size:0.52rem;">www.radiomateus633.com</p>
+</footer>
 
-</article>
+<!-- BACK TO TOP -->
+<button id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Voltar ao topo">↑</button>
 
 <script>
-  function showStep(index, el) {
-    document.querySelectorAll('.step-card').forEach(c => {
-      c.classList.remove('active');
-      c.setAttribute('aria-expanded', 'false');
-    });
-    document.querySelectorAll('.detail-panel').forEach(d => d.classList.remove('visible'));
-    el.classList.add('active');
-    el.setAttribute('aria-expanded', 'true');
-    document.getElementById('detail-' + index).classList.add('visible');
-  }
+/* NAV SCROLL */
+function irPara(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const navH = document.getElementById('mainNav').offsetHeight;
+  const top = el.getBoundingClientRect().top + window.scrollY - navH - 16;
+  window.scrollTo({ top, behavior: 'smooth' });
+}
 
-  document.querySelectorAll('.step-card').forEach(card => {
-    card.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') card.click();
+/* PROGRESS BAR + BACK TO TOP */
+window.addEventListener('scroll', () => {
+  const total = document.body.scrollHeight - window.innerHeight;
+  document.getElementById('progressBar').style.width = (window.scrollY / total * 100) + '%';
+  document.getElementById('backTop').classList.toggle('visivel', window.scrollY > 400);
+});
+
+/* INTERSECTION OBSERVER */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const sec = e.target;
+    sec.classList.add('visivel');
+
+    const idx = parseInt(sec.dataset.nav ?? '-1');
+    if (idx >= 0) {
+      document.querySelectorAll('.nav-btn').forEach((b, i) => b.classList.toggle('ativo', i === idx));
+    }
+
+    sec.querySelectorAll('.step-item').forEach((item, i) => {
+      setTimeout(() => item.classList.add('visivel'), 120 * i);
     });
+
+    obs.unobserve(sec);
   });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('.section').forEach(s => obs.observe(s));
+
+/* ACCORDION */
+function toggleAcc(btn) {
+  const item = btn.closest('.acc-item');
+  const body = item.querySelector('.acc-body');
+  const inner = item.querySelector('.acc-body-inner');
+  const isOpen = item.classList.contains('open');
+
+  document.querySelectorAll('.acc-item').forEach(i => {
+    i.classList.remove('open');
+    i.querySelector('.acc-body').style.maxHeight = '0';
+  });
+
+  if (!isOpen) {
+    item.classList.add('open');
+    body.style.maxHeight = (inner.scrollHeight + 48) + 'px';
+  }
+}
+
+/* REF TAG FLASH */
+function flashTag(el) {
+  el.classList.remove('flash');
+  void el.offsetWidth;
+  el.classList.add('flash');
+}
 </script>
 </body>
 </html>
